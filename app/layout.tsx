@@ -9,25 +9,25 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'SalonPro - Salon Management System',
-  description: 'Professional salon management dashboard for managing salons, services, styles, and stylists',
+  title: 'Benvily - Premium Booking Experience',
+  description: 'Discover and book appointments at luxury salons with personalized gender-filtered services',
   generator: 'v0.app',
   icons: {
     icon: [
       {
-        url: '/icon-light-32x32.png',
+        url: '/benvily.jpeg',
         media: '(prefers-color-scheme: light)',
       },
       {
-        url: '/icon-dark-32x32.png',
+        url: '/benvily.jpeg',
         media: '(prefers-color-scheme: dark)',
       },
       {
-        url: '/icon.svg',
+        url: '/benvily.jpeg',
         type: 'image/svg+xml',
       },
     ],
-    apple: '/apple-icon.png',
+    apple: '/benvily.jpeg',
   },
 }
 
