@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react'
 import { Label } from '@/components/ui/label'
 import { FieldGroup } from '@/components/ui/field'
-import { Button } from '@/components/ui/button'
+// import { Button } from '@/components/ui/button'
 import { Upload, X } from 'lucide-react'
 import { Controller, Control, FieldValues, Path } from 'react-hook-form'
 import { fileToBase64, isValidImageFile } from '@/lib/image-utils'
@@ -50,7 +50,7 @@ export function FormFileUpload<T extends FieldValues>({
               e.preventDefault()
               e.stopPropagation()
               const files = e.dataTransfer.files
-              if (files.length > 0) handleFile(files[0])
+              if (files.length > 0) handleFile(files[0], field)
             }}
             onDragOver={(e) => {
               e.preventDefault()
@@ -64,7 +64,7 @@ export function FormFileUpload<T extends FieldValues>({
               className="hidden"
               onChange={(e) => {
                 if (e.target.files?.[0]) {
-                  handleFile(e.target.files[0])
+                  handleFile(e.target.files[0], field)
                 }
               }}
             />
@@ -105,15 +105,21 @@ export function FormFileUpload<T extends FieldValues>({
     />
   )
 
-  function handleFile(file: File) {
+  function handleFile(file: File, field:any) {
     if (!isValidImageFile(file)) {
       alert('Please select a valid image file (max 5MB)')
       return
     }
 
-    fileToBase64(file).then((base64) => {
-      setPreview(base64)
-      field.onChange(base64)
-    })
+    let imageUrl = URL.createObjectURL(file)
+      setPreview(imageUrl)
+      console.log(imageUrl)
+      field.onChange(imageUrl)
+
+    // fileToBase64(file).then((base64) => {
+    //   setPreview(base64)
+    //   console.log(base64)
+    //   field.onChange(base64)
+    // })
   }
 }

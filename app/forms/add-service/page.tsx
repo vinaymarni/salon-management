@@ -14,7 +14,7 @@ import { serviceSchema, type Service } from '@/lib/schemas'
 import { salonsAtom, servicesAtom } from '@/lib/atoms'
 // import { mockSalons } from '@/lib/mock-data'
 import { useRouter } from 'next/navigation'
-import { durationOptions } from '@/lib/data'
+import { durationOptions, services } from '@/lib/data'
 
 export default function AddServicePage() {
   const router = useRouter()
@@ -26,7 +26,8 @@ export default function AddServicePage() {
     resolver: zodResolver(serviceSchema),
     defaultValues: {
       salonId: '',
-      name: '',
+      serviceName: '',
+      customServiceName: "",
       description: '',
       duration: '',
       price: '',
@@ -36,14 +37,15 @@ export default function AddServicePage() {
   const selectedSalonId = watch('salonId')
 
   const salonOptions = useMemo(() => {
-    const availableSalons = salons.length > 0 ? salons : []
+    const availableSalons = salons.length > 0 ? salons : [];
+    console.log(availableSalons)
     return availableSalons.map((salon) => ({
       value: salon.id || '',
-      label: salon.name,
+      name: salon.name,
     }))
-  }, [salons])
+  }, [salons]);
 
-
+  console.log(salonOptions)
 
   const onSubmit = async (data: Service) => {
     setIsSubmitting(true)
@@ -87,13 +89,23 @@ export default function AddServicePage() {
                 required
               />
 
-              <FormInput
-                control={control}
-                name="name"
-                label="Service Name"
-                placeholder="e.g., Hair Cut & Styling"
-                required
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormSelect
+                  control={control}
+                  name="serviceName"
+                  label="Service Name"
+                  options={services}
+                  placeholder="Select a Service"
+                  required
+                />
+
+                <FormInput
+                  control={control}
+                  name="customServiceName"
+                  label="Custom Service Name"
+                  placeholder="e.g., Hair Cut & Styling"
+                />
+              </div>
 
               <FormTextarea
                 control={control}
@@ -115,7 +127,7 @@ export default function AddServicePage() {
                 <FormInput
                   control={control}
                   name="price"
-                  label="Price"
+                  label="Price start's at"
                   type="text"
                   placeholder="₹50"
                   required

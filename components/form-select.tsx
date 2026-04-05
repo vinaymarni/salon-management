@@ -69,9 +69,9 @@ export function FormSelect<T extends FieldValues>({
             </SelectContent>
             :
             <SelectContent>
-              <span className='text-[12px] p-[4px]'>!No Data</span>
+              <span className='text-[12px] p-1'>!No Data</span>
             </SelectContent>
-      }
+          }
           </Select>
           {error && (
             <p className="text-sm text-destructive mt-1">{error.message}</p>

@@ -13,13 +13,13 @@ import { FormTextarea } from '@/components/form-textarea'
 import { FormFileUpload } from '@/components/form-file-upload'
 import { styleSchema, type Style } from '@/lib/schemas'
 import { servicesAtom, stylesAtom } from '@/lib/atoms'
-import { mockServices } from '@/lib/mock-data'
+// import { mockServices } from '@/lib/mock-data'
 import { useRouter } from 'next/navigation'
-import { durationOptions } from '@/lib/data'
+import { durationOptions, getName, services, styles } from '@/lib/data'
 
 export default function AddStylesPage() {
   const router = useRouter()
-  const [services] = useAtom(servicesAtom)
+  const [servicesData] = useAtom(servicesAtom)
   const [, setStyles] = useAtom(stylesAtom)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -27,7 +27,8 @@ export default function AddStylesPage() {
     resolver: zodResolver(styleSchema),
     defaultValues: {
       serviceId: '',
-      name: '',
+      styleName: '',
+      customStyleName: '',
       description: '',
       image: '',
       complexity: 'basic',
@@ -37,17 +38,17 @@ export default function AddStylesPage() {
   const selectedServiceId = watch('serviceId')
 
   const serviceOptions = useMemo(() => {
-    const availableServices = services.length > 0 ? services : mockServices
+    const availableServices = servicesData.length > 0 ? servicesData : [];
     return availableServices.map((service) => ({
-      value: service.id || '',
-      label: service.name,
+      value: service.serviceName || '',
+      name: getName(service.serviceName, services), 
     }))
-  }, [services])
+  }, [servicesData]);
 
   const complexityOptions = [
-    { value: 'basic', label: 'Basic' },
-    { value: 'intermediate', label: 'Intermediate' },
-    { value: 'advanced', label: 'Advanced' },
+    { value: 'basic', name: 'Basic' },
+    { value: 'intermediate', name: 'Intermediate' },
+    { value: 'advanced', name: 'Advanced' },
   ]
 
   const onSubmit = async (data: Style) => {
@@ -69,7 +70,11 @@ export default function AddStylesPage() {
     } finally {
       setIsSubmitting(false)
     }
-  }
+  };
+
+  const availableStyle = selectedServiceId ? 
+  styles.filter((eachStyle)=> eachStyle.serviceId == selectedServiceId)
+  : []
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
@@ -92,13 +97,23 @@ export default function AddStylesPage() {
                 required
               />
 
-              <FormInput
-                control={control}
-                name="name"
-                label="Style Name"
-                placeholder="e.g., Classic Bob"
-                required
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormSelect
+                  control={control}
+                  name="styleName"
+                  label="Style Name"
+                  options={availableStyle}
+                  placeholder="Select a Service"
+                  required
+                />
+
+                <FormInput
+                  control={control}
+                  name="customStyleName"
+                  label="Custom Style Name"
+                  placeholder="e.g., Classic Bob"
+                />
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormSelect

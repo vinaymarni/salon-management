@@ -20,7 +20,8 @@ import {
   stylesAtom,
   stylistsAtom,
 } from '@/lib/atoms'
-import { cities, localities, states } from '@/lib/data'
+import { cities, getName, localities, services, states, styles } from '@/lib/data'
+import Image from 'next/image'
 // import {
 //   mockSalons,
 //   mockServices,
@@ -30,21 +31,21 @@ import { cities, localities, states } from '@/lib/data'
 
 export default function DashboardPage() {
   const [salons, setSalons] = useAtom(salonsAtom)
-  const [services, setServices] = useAtom(servicesAtom)
-  const [styles, setStyles] = useAtom(stylesAtom)
+  const [servicesData, setServices] = useAtom(servicesAtom)
+  const [stylesData] = useAtom(stylesAtom)
   const [stylists, setStyilists] = useAtom(stylistsAtom)
-  const [isInitialized, setIsInitialized] = useState(false)
+  // const [isInitialized, setIsInitialized] = useState(false)
 
   // Initialize with mock data on first load
-  useEffect(() => {
-    if (!isInitialized) {
-      if (salons.length === 0) setSalons([])
-      if (services.length === 0) setServices([])
-      if (styles.length === 0) setStyles([])
-      if (stylists.length === 0) setStyilists([])
-      setIsInitialized(true)
-    }
-  }, [isInitialized, salons, services, styles, stylists, setSalons, setServices, setStyles, setStyilists])
+  // useEffect(() => {
+  //   if (!isInitialized) {
+  //     if (salons.length === 0) setSalons([])
+  //     if (servicesData.length === 0) setServices([])
+  //     if (styles.length === 0) setStyles([])
+  //     if (stylists.length === 0) setStyilists([])
+  //     setIsInitialized(true)
+  //   }
+  // }, [isInitialized, salons, servicesData, styles, stylists, setSalons, setServices, setStyles, setStyilists])
 
   const stats = [
     {
@@ -56,14 +57,14 @@ export default function DashboardPage() {
     },
     {
       title: 'Services',
-      count: services.length,
+      count: servicesData.length,
       icon: Scissors,
       href: '/forms/add-service',
       color: 'text-purple-600',
     },
     {
       title: 'Styles',
-      count: styles.length,
+      count: stylesData.length,
       icon: Palette,
       href: '/forms/add-styles',
       color: 'text-pink-600',
@@ -76,12 +77,6 @@ export default function DashboardPage() {
       color: 'text-green-600',
     },
   ];
-
-  const getName = (name: string, identifier: string) => {
-    const list = identifier === "state" ? states : identifier === "city" ? cities : localities;
-    const obj = list.filter((each)=> each.value == name) ?? [];
-    return obj[0] ? obj[0].name : ""
-  }
 
   return (
     <div className="p-8">
@@ -136,8 +131,19 @@ export default function DashboardPage() {
               if(!salon.id) return;
               return(
               <Card key={`add_salon_${salon.id}`}>
+                {salon.logo &&
+                <div className='w-[96%] mx-auto flex justify-center items-center '>
+                  <Image
+                    src={salon.logo ?? ""}
+                    alt="Preview"
+                    width={100}
+                    height={100}
+                    className="object-contain rounded-lg w-full max-h-[200px] "
+                  />
+                </div>
+                }
                 <CardHeader>
-                  <CardTitle className="text-lg">{salon.name}</CardTitle>
+                  <CardTitle className="text-lg capitalize ">{salon.name}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-2 capitalize ">
@@ -150,8 +156,10 @@ export default function DashboardPage() {
                     <p className="text-sm mb-4">{salon.description}</p>
                   )}
                   <p className="text-sm text-muted-foreground mb-4">
-                    {getName(salon.state, "state")}, {getName(salon.city, "city")}, {getName(salon.locality, "locality")}-{salon.pincode}
+                    {getName(salon.state, states)}, {getName(salon.city, cities)}, {getName(salon.locality, localities)}-{salon.pincode}
                   </p>
+
+                  <p>{salon.address}</p>
 
                   <button
                     onClick={() =>
@@ -187,19 +195,22 @@ export default function DashboardPage() {
             </Button>
           </Link>
         </div>
-        {services.length > 0 ? (
+        {servicesData.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {services.map((service) => {
+            {servicesData.map((service) => {
+              const selectedSalon = salons.filter((each: any)=> each.id == service.salonId) ?? [];
+              const salonName = selectedSalon[0] ? selectedSalon[0].name : ""
               if(!service.id) return;
               return(
               <Card key={`service_${service.id}`}>
                 <CardHeader>
-                  <CardTitle className="text-lg">{service.name}</CardTitle>
+                  <CardTitle className="text-lg">{getName(service.serviceName, services)}</CardTitle>
                   <CardDescription>
-                    {service.duration} • {service.price}
+                    {service.duration} • {service.price}/-
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
+                  <p className="text-sm mb-4 ">service at <span className='font-semibold capitalize '>{salonName}</span></p>
                   {service.description && (
                     <p className="text-sm mb-4">{service.description}</p>
                   )}
@@ -230,23 +241,38 @@ export default function DashboardPage() {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold">Styles</h2>
-          <Link href="/forms/add-service">
+          <Link href="/forms/add-styles">
             <Button size="sm">
               <Plus className="w-4 h-4 mr-1" />
               Add Style
             </Button>
           </Link>
         </div>
-        {styles.length > 0 ? (
+        {stylesData.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {styles.map((style) => {
+            {stylesData.map((style) => {
+              const selectedService = services.filter((each: any)=> each.id == style.serviceId) ?? [];
+              const serviceName = selectedService[0] ? selectedService[0].name : ""
+
               if(!style.id) return;
               return(
               <Card key={`service_${style.id}`}>
+                {style.image &&
+                <div className='w-[96%] mx-auto flex justify-center items-center '>
+                  <Image
+                    src={style.image ?? ""}
+                    alt="Preview"
+                    width={100}
+                    height={100}
+                    className="object-cover rounded-lg w-full h-full max-h-[200px] max-w-[200px] "
+                  />
+                </div>
+                }
                 <CardHeader>
-                  <CardTitle className="text-lg">{style.name}</CardTitle>
+                  <CardTitle className="text-lg">{getName(style.styleName, styles)}</CardTitle>
+                  <CardDescription>Service: ({serviceName})</CardDescription>
                   <CardDescription>
-                    {style.complexity} • {style.price}
+                    {style.complexity} • {style.duration} • {style.price}/-
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -277,7 +303,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stylists Section */}
-      <div>
+      {/* <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold">Stylists</h2>
           <Link href="/forms/add-stylist">
@@ -337,7 +363,7 @@ export default function DashboardPage() {
             description="Add your first stylist to the team"
           />
         )}
-      </div>
+      </div> */}
     </div>
   )
 }

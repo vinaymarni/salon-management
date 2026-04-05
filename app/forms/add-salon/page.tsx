@@ -33,7 +33,8 @@ export default function AddSalonPage() {
       description: '',
       logo: '',
       pincode: "",
-      ownerName: ""
+      ownerName: "",
+      address: ""
     },
   });
 
@@ -144,6 +145,13 @@ export default function AddSalonPage() {
                 />
               </div>
 
+              <FormTextarea
+                control={control}
+                name="address"
+                label="Full Address"
+                placeholder="Enter Full Address"
+                required
+              />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormInput

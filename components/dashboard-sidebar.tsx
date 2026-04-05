@@ -34,11 +34,11 @@ const navItems = [
     label: 'Add Styles',
     icon: Palette,
   },
-  {
-    href: '/forms/add-stylist',
-    label: 'Add Stylist',
-    icon: Users,
-  },
+  // {
+  //   href: '/forms/add-stylist',
+  //   label: 'Add Stylist',
+  //   icon: Users,
+  // },
 ]
 
 export function DashboardSidebar() {

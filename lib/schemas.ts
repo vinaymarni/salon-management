@@ -11,13 +11,15 @@ export const salonSchema = z.object({
   locality: z.string().min(2, 'Locality is required'),
   pincode: z.string().max(6, 'Pincode is required'),
   ownerName: z.string().min(2, 'Owner name is required'),
+  address: z.string().min(2, 'Address is required'),
 })
 
 export type Salon = z.infer<typeof salonSchema> & { id?: string }
 
 export const serviceSchema = z.object({
   salonId: z.string().min(1, 'Salon is required'),
-  name: z.string().min(2, 'Service name is required'),
+  serviceName: z.string().min(2, 'Service name is required'),
+  customServiceName: z.string().optional(),
   description: z.string().optional(),
   duration: z.string().min(1, 'Duration is required'),
   price: z.string().min(1, 'Price is required'),
@@ -27,7 +29,8 @@ export type Service = z.infer<typeof serviceSchema> & { id?: string }
 
 export const styleSchema = z.object({
   serviceId: z.string().min(1, 'Service is required'),
-  name: z.string().min(2, 'Style name is required'),
+  styleName: z.string().min(2, 'Style name is required'),
+  customStyleName: z.string().optional(),
   description: z.string().optional(),
   image: z.string().optional(),
   complexity: z.enum(['basic', 'intermediate', 'advanced']),
