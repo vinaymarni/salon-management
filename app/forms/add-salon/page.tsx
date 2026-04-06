@@ -14,7 +14,7 @@ import { salonSchema, type Salon } from '@/lib/schemas'
 import { salonsAtom } from '@/lib/atoms'
 import { useRouter } from 'next/navigation'
 import { FormSelect } from '@/components/form-select'
-import { cities, localities, states } from '@/lib/data'
+import { cities, gender, localities, states } from '@/lib/data'
 
 export default function AddSalonPage() {
   const router = useRouter()
@@ -34,7 +34,8 @@ export default function AddSalonPage() {
       logo: '',
       pincode: "",
       ownerName: "",
-      address: ""
+      address: "",
+      availableFor:""
     },
   });
 
@@ -60,7 +61,9 @@ export default function AddSalonPage() {
     }
   }
 
-  const {state, city} = watch();
+  const {state, city, availableFor} = watch();
+
+  console.log(availableFor)
 
   useEffect(()=>{
     setValue("city", "");
@@ -72,7 +75,6 @@ export default function AddSalonPage() {
   }, [city]);
 
   const selectedCities = cities.filter((eachCity:any)=> eachCity.stateId === state) ?? [];
-
   const selectedLocalities = localities.filter((eachLoc:any)=> eachLoc.cityId === `${state}-${city}`) ?? [];
 
   return (
@@ -87,15 +89,15 @@ export default function AddSalonPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                <FormInput
-                  control={control}
-                  name="name"
-                  label="Salon Name"
-                  placeholder="Enter salon name"
-                  required
-                />
+              <FormInput
+                control={control}
+                name="name"
+                label="Salon Name"
+                placeholder="Enter salon name"
+                required
+              />
 
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                 <FormInput
                   control={control}
                   name="ownerName"
@@ -103,8 +105,16 @@ export default function AddSalonPage() {
                   placeholder="Enter Owner Name"
                   required
                 />
+
+                <FormSelect
+                  control={control}
+                  name="availableFor"
+                  label="Available For"
+                  options={gender}
+                  placeholder="Select Available For"
+                  required
+                />
               </div>
-             
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormSelect
@@ -159,7 +169,7 @@ export default function AddSalonPage() {
                   name="phone"
                   label="Phone Number"
                   type="tel"
-                  placeholder="555-0100"
+                  placeholder="97********"
                   required
                 />
 

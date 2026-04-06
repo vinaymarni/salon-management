@@ -15,7 +15,7 @@ import { styleSchema, type Style } from '@/lib/schemas'
 import { servicesAtom, stylesAtom } from '@/lib/atoms'
 // import { mockServices } from '@/lib/mock-data'
 import { useRouter } from 'next/navigation'
-import { durationOptions, getName, services, styles } from '@/lib/data'
+import { durationOptions, gender, getName, services, styles } from '@/lib/data'
 
 export default function AddStylesPage() {
   const router = useRouter()
@@ -32,6 +32,7 @@ export default function AddStylesPage() {
       description: '',
       image: '',
       complexity: 'basic',
+      availableFor: ""
     },
   })
 
@@ -88,14 +89,25 @@ export default function AddStylesPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <FormSelect
-                control={control}
-                name="serviceId"
-                label="Service"
-                options={serviceOptions}
-                placeholder="Select a service"
-                required
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormSelect
+                  control={control}
+                  name="serviceId"
+                  label="Service"
+                  options={serviceOptions}
+                  placeholder="Select a service"
+                  required
+                />
+
+                <FormSelect
+                  control={control}
+                  name="availableFor"
+                  label="Available For"
+                  options={gender}
+                  placeholder="Select Available For"
+                  required
+                />
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormSelect

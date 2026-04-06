@@ -14,7 +14,7 @@ import { serviceSchema, type Service } from '@/lib/schemas'
 import { salonsAtom, servicesAtom } from '@/lib/atoms'
 // import { mockSalons } from '@/lib/mock-data'
 import { useRouter } from 'next/navigation'
-import { durationOptions, services } from '@/lib/data'
+import { durationOptions, gender, services } from '@/lib/data'
 
 export default function AddServicePage() {
   const router = useRouter()
@@ -31,6 +31,7 @@ export default function AddServicePage() {
       description: '',
       duration: '',
       price: '',
+      availableFor: ""
     },
   })
 
@@ -80,14 +81,25 @@ export default function AddServicePage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <FormSelect
-                control={control}
-                name="salonId"
-                label="Salon"
-                options={salonOptions}
-                placeholder="Select a salon"
-                required
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormSelect
+                  control={control}
+                  name="salonId"
+                  label="Salon"
+                  options={salonOptions}
+                  placeholder="Select a salon"
+                  required
+                />
+
+                <FormSelect
+                  control={control}
+                  name="availableFor"
+                  label="Available For"
+                  options={gender}
+                  placeholder="Select Available For"
+                  required
+                />
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormSelect

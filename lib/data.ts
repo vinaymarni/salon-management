@@ -446,3 +446,20 @@ export const getName = (name: string, list: any) => {
   return obj[0] ? obj[0].name : ""
 }
 
+export const gender = [
+  {
+    id: "M",
+    name: "Male",
+    value: "male"
+  },
+  {
+    id: "F",
+    name: "Female",
+    value: "female"
+  },
+  {
+    id: "U",
+    name: "Unisex",
+    value: "unisex"
+  }
+];

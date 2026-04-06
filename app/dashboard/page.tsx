@@ -9,7 +9,7 @@ import {
   Building2,
   Scissors,
   Palette,
-  Users,
+  // Users,
   Plus,
   Trash2,
 } from 'lucide-react'
@@ -18,7 +18,7 @@ import {
   salonsAtom,
   servicesAtom,
   stylesAtom,
-  stylistsAtom,
+  // stylistsAtom,
 } from '@/lib/atoms'
 import { cities, getName, localities, services, states, styles } from '@/lib/data'
 import Image from 'next/image'
@@ -33,7 +33,7 @@ export default function DashboardPage() {
   const [salons, setSalons] = useAtom(salonsAtom)
   const [servicesData, setServices] = useAtom(servicesAtom)
   const [stylesData] = useAtom(stylesAtom)
-  const [stylists, setStyilists] = useAtom(stylistsAtom)
+  // const [stylists, setStyilists] = useAtom(stylistsAtom)
   // const [isInitialized, setIsInitialized] = useState(false)
 
   // Initialize with mock data on first load
@@ -69,13 +69,13 @@ export default function DashboardPage() {
       href: '/forms/add-styles',
       color: 'text-pink-600',
     },
-    {
-      title: 'Stylists',
-      count: stylists.length,
-      icon: Users,
-      href: '/forms/add-stylist',
-      color: 'text-green-600',
-    },
+    // {
+    //   title: 'Stylists',
+    //   count: stylists.length,
+    //   icon: Users,
+    //   href: '/forms/add-stylist',
+    //   color: 'text-green-600',
+    // },
   ];
 
   return (
@@ -149,6 +149,9 @@ export default function DashboardPage() {
                   <p className="text-sm text-muted-foreground mb-2 capitalize ">
                     Owner: {salon.ownerName} 📞 {salon.phone}
                   </p>
+                  <p className="text-sm text-muted-foreground mb-2 capitalize ">
+                    Available For: {salon.availableFor}
+                  </p>
                   <p className="text-sm text-muted-foreground mb-4">
                     ✉️ {salon.email}
                   </p>
@@ -211,6 +214,9 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm mb-4 ">service at <span className='font-semibold capitalize '>{salonName}</span></p>
+                  <p className="text-sm text-muted-foreground mb-2 capitalize ">
+                    Available For: {service.availableFor}
+                  </p>
                   {service.description && (
                     <p className="text-sm mb-4">{service.description}</p>
                   )}
@@ -276,6 +282,9 @@ export default function DashboardPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
+                  <p className="text-sm text-muted-foreground mb-2 capitalize ">
+                    Available For: {style.availableFor}
+                  </p>
                   {style.description && (
                     <p className="text-sm mb-4">{style.description}</p>
                   )}
