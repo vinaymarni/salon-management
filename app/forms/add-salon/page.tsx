@@ -12,14 +12,17 @@ import { FormTextarea } from '@/components/form-textarea'
 import { FormFileUpload } from '@/components/form-file-upload'
 import { salonSchema, type Salon } from '@/lib/schemas'
 import { salonsAtom } from '@/lib/atoms'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { FormSelect } from '@/components/form-select'
 import { cities, gender, localities, states } from '@/lib/data'
 
 export default function AddSalonPage() {
+  const [salons, setSalons] = useAtom(salonsAtom)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const searchParams = useSearchParams();
   const router = useRouter()
-  const [, setSalons] = useAtom(salonsAtom)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const id = searchParams.get('salonId');
 
   const { control, handleSubmit, reset, watch, setValue } = useForm<Salon>({
     resolver: zodResolver(salonSchema),
@@ -38,6 +41,15 @@ export default function AddSalonPage() {
       availableFor:""
     },
   });
+
+  useEffect(()=>{
+    if(!id) return;
+    const values = salons.filter((each)=>each.id === id);
+    if(values && values[0]){
+      console.log(values[0])
+      reset({...values[0]})
+    }
+  }, [id]);
 
   const onSubmit = async (data: Salon) => {
     setIsSubmitting(true)
@@ -61,9 +73,7 @@ export default function AddSalonPage() {
     }
   }
 
-  const {state, city, availableFor} = watch();
-
-  console.log(availableFor)
+  const {state, city} = watch();
 
   useEffect(()=>{
     setValue("city", "");
@@ -80,7 +90,7 @@ export default function AddSalonPage() {
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-2xl mx-auto">
-        <Card>
+        <Card> 
           <CardHeader>
             <CardTitle>Add New Salon</CardTitle>
             <CardDescription>
@@ -96,6 +106,8 @@ export default function AddSalonPage() {
                 placeholder="Enter salon name"
                 required
               />
+
+              {/* <InputField /> */}
 
               <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                 <FormInput
